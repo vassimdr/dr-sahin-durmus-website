@@ -164,19 +164,20 @@ export async function DELETE(
   }
 }
 
-// GET - Tek medya yayınını getir
+// GET - Tek medya yayını getir
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer();
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
     if (isNaN(id)) {
       return NextResponse.json({ 
-        error: 'Geçersiz ID',
-        details: 'ID sayı olmalıdır'
+        error: 'Geçersiz medya yayını ID',
+        details: 'Medya yayını ID sayı olmalıdır'
       }, { status: 400 });
     }
 
@@ -201,6 +202,96 @@ export async function GET(
 
   } catch (error) {
     console.error('❌ Media publication GET error:', error);
+    return NextResponse.json({ 
+      error: 'Sunucu hatası',
+      details: error instanceof Error ? error.message : 'Bilinmeyen hata'
+    }, { status: 500 });
+  }
+}
+
+// PATCH - Medya yayını güncelle
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const supabase = await createSupabaseServer();
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
+    const body = await request.json();
+
+    if (isNaN(id)) {
+      return NextResponse.json({ 
+        error: 'Geçersiz medya yayını ID',
+        details: 'Medya yayını ID sayı olmalıdır'
+      }, { status: 400 });
+    }
+
+    const {
+      title,
+      summary,
+      source_name,
+      source_url,
+      publication_date,
+      image_url,
+      category,
+      tags,
+      is_featured = false
+    } = body;
+
+    // Validasyon
+    if (!title || !source_name || !source_url || !publication_date) {
+      return NextResponse.json({ 
+        error: 'Eksik alanlar',
+        details: 'Başlık, kaynak, URL ve yayın tarihi zorunludur'
+      }, { status: 400 });
+    }
+
+    const updateData = {
+      title: title.trim(),
+      summary: summary?.trim() || null,
+      source_name: source_name.trim(),
+      source_url: source_url.trim(),
+      publication_date,
+      image_url: image_url?.trim() || null,
+      category: category?.trim() || null,
+      tags: Array.isArray(tags) ? tags : (tags ? tags.split(',').map((tag: string) => tag.trim()).filter(Boolean) : []),
+      is_featured: Boolean(is_featured),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from('media_publications')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Media publication update error:', error);
+      return NextResponse.json({ 
+        error: 'Medya yayını güncellenemedi',
+        details: error.message
+      }, { status: 500 });
+    }
+
+    if (!data) {
+      return NextResponse.json({ 
+        error: 'Medya yayını bulunamadı',
+        details: 'Belirtilen ID ile medya yayını bulunamadı'
+      }, { status: 404 });
+    }
+
+    console.log('✅ Media publication updated successfully:', data);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Medya yayını başarıyla güncellendi',
+      data
+    });
+
+  } catch (error) {
+    console.error('❌ Media publication PATCH error:', error);
     return NextResponse.json({ 
       error: 'Sunucu hatası',
       details: error instanceof Error ? error.message : 'Bilinmeyen hata'

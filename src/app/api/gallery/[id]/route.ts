@@ -45,20 +45,21 @@ async function createSupabaseClient() {
   );
 }
 
-// GET - Belirli bir galeri öğesini getir
+// GET - Tek resim getir
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseClient();
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
     
     if (isNaN(id)) {
-      return NextResponse.json(
-        { error: 'Geçersiz ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ 
+        error: 'Geçersiz resim ID',
+        details: 'Resim ID sayı olmalıdır'
+      }, { status: 400 });
     }
     
     const { data, error } = await supabase
@@ -174,17 +175,18 @@ export async function PUT(
 // DELETE - Galeri öğesini sil
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseClient();
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
     
     if (isNaN(id)) {
-      return NextResponse.json(
-        { error: 'Geçersiz ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ 
+        error: 'Geçersiz resim ID',
+        details: 'Resim ID sayı olmalıdır'
+      }, { status: 400 });
     }
     
     // Soft delete (is_active = false) kullan

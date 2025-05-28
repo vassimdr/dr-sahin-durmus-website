@@ -14,29 +14,30 @@ async function createSupabaseServer() {
   });
 }
 
-// POST - Video görüntülenme sayısını artır
+// POST - Video görüntüleme sayısını artır
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const videoId = parseInt(params.id);
-    
-    if (isNaN(videoId)) {
+    const supabase = await createSupabaseServer();
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
+
+    if (isNaN(id)) {
       return NextResponse.json({ 
-        error: 'Geçersiz video ID' 
+        error: 'Geçersiz video ID',
+        details: 'Video ID sayı olmalıdır'
       }, { status: 400 });
     }
 
-    console.log(`📊 Incrementing view count for video ${videoId}`);
-
-    const supabase = await createSupabaseServer();
+    console.log(`📊 Incrementing view count for video ${id}`);
 
     // Video var mı kontrol et
     const { data: video, error: fetchError } = await supabase
       .from('doctor_videos')
       .select('id, view_count, title')
-      .eq('id', videoId)
+      .eq('id', id)
       .eq('is_active', true)
       .single();
 
@@ -53,7 +54,7 @@ export async function POST(
       .update({ 
         view_count: video.view_count + 1 
       })
-      .eq('id', videoId)
+      .eq('id', id)
       .select('view_count')
       .single();
 
@@ -71,7 +72,7 @@ export async function POST(
       success: true,
       message: 'Görüntülenme sayısı artırıldı',
       data: {
-        video_id: videoId,
+        video_id: id,
         new_view_count: data.view_count
       }
     });

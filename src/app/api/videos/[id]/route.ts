@@ -52,17 +52,21 @@ function createSlug(text: string): string {
 // GET - Tek video getir
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer();
-    const videoId = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
-    if (isNaN(videoId)) {
+    if (isNaN(id)) {
       return NextResponse.json({ 
-        error: 'Geçersiz video ID' 
+        error: 'Geçersiz video ID',
+        details: 'Video ID sayı olmalıdır'
       }, { status: 400 });
     }
+
+    console.log('🎬 Getting video:', id);
 
     const { data, error } = await supabase
       .from('videos')
@@ -75,7 +79,7 @@ export async function GET(
           icon
         )
       `)
-      .eq('id', videoId)
+      .eq('id', id)
       .single();
 
     if (error) {
@@ -102,17 +106,19 @@ export async function GET(
 // PATCH - Video güncelle
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer();
-    const videoId = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
     const body = await request.json();
-    console.log('🎬 Video update request:', { videoId, body });
+    console.log('🎬 Video update request:', { id, body });
 
-    if (isNaN(videoId)) {
+    if (isNaN(id)) {
       return NextResponse.json({ 
-        error: 'Geçersiz video ID' 
+        error: 'Geçersiz video ID',
+        details: 'Video ID sayı olmalıdır'
       }, { status: 400 });
     }
 
@@ -139,7 +145,7 @@ export async function PATCH(
     const { data: existingVideo, error: fetchError } = await supabase
       .from('videos')
       .select('id, title, slug, published_date')
-      .eq('id', videoId)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingVideo) {
@@ -161,7 +167,7 @@ export async function PATCH(
           .from('videos')
           .select('id')
           .eq('slug', newSlug)
-          .neq('id', videoId)
+          .neq('id', id)
           .single();
 
         if (!conflictVideo) break;
@@ -211,7 +217,7 @@ export async function PATCH(
     const { data, error } = await supabase
       .from('videos')
       .update(updateData)
-      .eq('id', videoId)
+      .eq('id', id)
       .select()
       .single();
 
@@ -243,25 +249,27 @@ export async function PATCH(
 // DELETE - Video sil
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer();
-    const videoId = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
-    if (isNaN(videoId)) {
+    if (isNaN(id)) {
       return NextResponse.json({ 
-        error: 'Geçersiz video ID' 
+        error: 'Geçersiz video ID',
+        details: 'Video ID sayı olmalıdır'
       }, { status: 400 });
     }
 
-    console.log('🗑️ Deleting video:', videoId);
+    console.log('🗑️ Deleting video:', id);
 
     // Önce videoyu kontrol et
     const { data: existingVideo, error: fetchError } = await supabase
       .from('videos')
       .select('id, video_url')
-      .eq('id', videoId)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingVideo) {
@@ -297,7 +305,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('videos')
       .delete()
-      .eq('id', videoId);
+      .eq('id', id);
 
     if (error) {
       console.error('❌ Video deletion error:', error);
