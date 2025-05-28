@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Settings, Video, MessageSquare, FileText, Home, LogOut, User, Shield, Newspaper } from 'lucide-react';
+import { Settings, Video, MessageSquare, FileText, Home, LogOut, User, Shield, Newspaper, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   generateDeviceFingerprint, 
@@ -219,6 +219,17 @@ export default function AdminLayout({
                   >
                     <MessageSquare className="h-5 w-5 mr-3" />
                     Yorumlar
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin/callback-requests"
+                    className={`flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
+                      pathname === '/admin/callback-requests' ? 'bg-blue-50 text-blue-700' : ''
+                    }`}
+                  >
+                    <Phone className="h-5 w-5 mr-3" />
+                    Geri Arama Talepleri
                   </Link>
                 </li>
                 <li>

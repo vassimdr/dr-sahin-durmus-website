@@ -7,6 +7,7 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import PublicationsSection from "@/components/home/PublicationsSection";
 import BlogPreview from "@/components/home/BlogPreview";
 import ContactSnippet from "@/components/home/ContactSnippet";
+import CallbackForm from "@/components/home/CallbackForm";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,16 @@ export default function HomePage() {
         <DoctorIntroduction />
         <VideoSection />
         <TestimonialsSection />
+        
+        {/* Geri Arama Formu */}
+        <section className="py-20 bg-white w-full">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md mx-auto">
+              <CallbackForm />
+            </div>
+          </div>
+        </section>
+        
         <PublicationsSection />
         <BlogPreview />
         <ContactSnippet />

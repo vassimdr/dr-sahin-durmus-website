@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, Video, FileText, Newspaper, Image as ImageIcon } from 'lucide-react';
+import { MessageSquare, Video, FileText, Newspaper, Image as ImageIcon, Phone } from 'lucide-react';
 
 export default function AdminDashboard() {
   return (
@@ -16,7 +16,7 @@ export default function AdminDashboard() {
       {/* Management Cards */}
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-6">Yönetim Paneli</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -30,6 +30,23 @@ export default function AdminDashboard() {
               </p>
               <Button asChild className="w-full">
                 <Link href="/admin/reviews">Yorumları Yönet</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Phone className="h-5 w-5 mr-2" />
+                Geri Arama Talepleri
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Müşteri geri arama taleplerini görüntüleyin ve yönetin
+              </p>
+              <Button asChild className="w-full" variant="outline">
+                <Link href="/admin/callback-requests">Talepleri Yönet</Link>
               </Button>
             </CardContent>
           </Card>
