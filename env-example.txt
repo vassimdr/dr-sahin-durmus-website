@@ -1,0 +1,35 @@
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Database Configuration (if using external database)
+DATABASE_URL=postgresql://username:password@localhost:5432/dishekimi_db
+
+# Storage Configuration
+NEXT_PUBLIC_STORAGE_BUCKET=gallery-images
+NEXT_PUBLIC_MAX_FILE_SIZE=5242880
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+
+# Security
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+# Admin Panel Access (optional)
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=secure_password
+
+# Email Configuration (if needed)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
+
+# Analytics (optional)
+GOOGLE_ANALYTICS_ID=GA-XXXXXXXXX
+
+# Image Processing
+NEXT_PUBLIC_IMAGE_DOMAINS=images.unsplash.com,your-supabase-project.supabase.co 
