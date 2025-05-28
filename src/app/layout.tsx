@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: "İstanbul'da uzman diş hekimi. İmplant tedavisi, estetik diş hekimliği, oral cerrahi ve ortodonti alanlarında 15+ yıl deneyim. Ücretsiz muayene için randevu alın.",
   keywords: "diş hekimi, istanbul diş hekimi, implant tedavisi, estetik diş hekimliği, diş kliniği, oral cerrahi, ortodonti, diş beyazlatma",
   authors: [{ name: "Dr. Şahin DURMUŞ" }],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
   openGraph: {
     title: "Dr. Şahin DURMUŞ - Uzman Diş Hekimi",
     description: "İmplant, estetik diş hekimliği ve oral cerrahi uzmanı. 15+ yıl deneyim, %98 hasta memnuniyeti.",

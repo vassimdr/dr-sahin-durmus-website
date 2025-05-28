@@ -63,7 +63,7 @@ const BlogPreview = () => {
         </motion.div>
 
         {/* Blog Posts */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
           {posts.map((post, index) => (
             <motion.article
               key={post.id}

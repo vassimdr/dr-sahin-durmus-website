@@ -66,10 +66,10 @@ export default function BlogPage() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6">
               Diş Sağlığı Blog
             </h1>
-            <p className="text-xl text-slate-600 mb-8">
+            <p className="text-lg sm:text-xl text-slate-600 mb-8">
               Ağız ve diş sağlığı konularında güncel bilgiler, uzman önerileri ve 
               tedavi süreçleri hakkında faydalı içerikler.
             </p>
@@ -82,7 +82,7 @@ export default function BlogPage() {
                 placeholder="Blog yazılarında ara..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
               />
               {searchLoading && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -146,7 +146,7 @@ export default function BlogPage() {
             </motion.div>
 
             {featuredLoading ? (
-              <div className="grid md:grid-cols-2 gap-8 mb-20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-20">
                 {Array.from({ length: 2 }).map((_, i) => (
                   <div key={i} className="bg-slate-50 rounded-xl overflow-hidden">
                     <div className="h-64 bg-slate-200 animate-pulse"></div>
@@ -163,7 +163,7 @@ export default function BlogPage() {
                 <p className="text-red-600">{featuredError}</p>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 gap-8 mb-20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-20">
                 {featuredPosts?.map((post, index) => (
                   <motion.article
                     key={post.id}
@@ -253,7 +253,7 @@ export default function BlogPage() {
 
           {/* Loading State */}
           {(postsLoading || searchLoading) && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                   <div className="h-48 bg-slate-200 animate-pulse"></div>
@@ -308,7 +308,7 @@ export default function BlogPage() {
 
           {/* Posts Grid */}
           {!postsLoading && !searchLoading && postsToShow && postsToShow.length > 0 && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {postsToShow.map((post, index) => (
                 <motion.article
                   key={post.id}
