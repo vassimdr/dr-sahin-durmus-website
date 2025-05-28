@@ -94,11 +94,12 @@ export async function GET(
 // PUT - Galeri öğesini güncelle
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseClient();
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
     const body: Partial<GalleryItem> = await request.json();
     
     if (isNaN(id)) {
