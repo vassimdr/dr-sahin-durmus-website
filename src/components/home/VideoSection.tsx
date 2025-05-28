@@ -233,7 +233,9 @@ const VideoCard = ({ video, index }: { video: DoctorVideo; index: number }) => {
     >
       {/* Video Container */}
       <div 
-        className="relative bg-slate-900 rounded-xl overflow-hidden aspect-[9/16] shadow-lg hover:shadow-xl transition-shadow duration-300"
+        className={`relative bg-slate-900 rounded-xl overflow-hidden aspect-[9/16] shadow-lg hover:shadow-xl transition-all duration-300 ${
+          !isMuted ? 'border border-blue-500' : ''
+        }`}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
