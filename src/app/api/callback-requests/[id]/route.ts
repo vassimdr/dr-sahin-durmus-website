@@ -29,7 +29,7 @@ function validateUpdateData(data: any) {
     errors.push('Öncelik 1-5 arasında olmalıdır')
   }
   
-  const validSources = ['website', 'phone', 'whatsapp', 'social', 'referral']
+  const validSources = ['website', 'phone', 'whatsapp', 'instagram', 'tiktok', 'social', 'referral']
   if (data.source !== undefined && !validSources.includes(data.source)) {
     errors.push('Geçersiz kaynak türü')
   }
@@ -45,10 +45,11 @@ function validateUpdateData(data: any) {
 // GET - Tek geri arama talebini getir
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -95,10 +96,11 @@ export async function GET(
 // PATCH - Geri arama talebini güncelle (dinamik)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     const body = await request.json()
     
     if (isNaN(id)) {
@@ -207,10 +209,11 @@ export async function PATCH(
 // DELETE - Geri arama talebini sil
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     
     if (isNaN(id)) {
       return NextResponse.json(
