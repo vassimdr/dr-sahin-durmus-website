@@ -120,7 +120,14 @@ SECURITY DEFINER
 AS $$
 DECLARE
     result json;
+    avg_hours numeric;
 BEGIN
+    -- Ortalama yanıt süresini ayrı hesapla
+    SELECT ROUND(AVG(EXTRACT(EPOCH FROM (called_at - created_at))/3600)::numeric, 2)
+    INTO avg_hours
+    FROM public.callback_requests
+    WHERE called_at IS NOT NULL;
+    
     SELECT json_build_object(
         'total', COUNT(*),
         'pending', COUNT(*) FILTER (WHERE status = 'pending'),
@@ -131,7 +138,7 @@ BEGIN
         'today_total', COUNT(*) FILTER (WHERE DATE(created_at) = CURRENT_DATE),
         'today_pending', COUNT(*) FILTER (WHERE DATE(created_at) = CURRENT_DATE AND status = 'pending'),
         'high_priority', COUNT(*) FILTER (WHERE priority >= 4 AND status IN ('pending', 'scheduled')),
-        'avg_response_hours', ROUND(AVG(EXTRACT(EPOCH FROM (called_at - created_at))/3600)::numeric, 2) FILTER (WHERE called_at IS NOT NULL)
+        'avg_response_hours', COALESCE(avg_hours, 0)
     )
     INTO result
     FROM public.callback_requests;
