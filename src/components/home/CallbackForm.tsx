@@ -309,10 +309,10 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
                   type="button"
                   onClick={() => handleInputChange('priority', option.value)}
                   disabled={isSubmitting}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? option.selectedColor
-                      : `${option.color} hover:${option.selectedColor}`
+                      ? `${option.selectedColor} border-current shadow-sm ring-2 ring-blue-400 ring-opacity-50`
+                      : `${option.color} border-transparent hover:${option.selectedColor} hover:border-current`
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   <IconComponent className="w-4 h-4" />
@@ -340,10 +340,10 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
                   type="button"
                   onClick={() => handleInputChange('source', option.value)}
                   disabled={isSubmitting}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? option.selectedColor
-                      : `${option.color} hover:${option.selectedColor}`
+                      ? `${option.selectedColor} border-current shadow-sm ring-2 ring-blue-400 ring-opacity-50`
+                      : `${option.color} border-transparent hover:${option.selectedColor} hover:border-current`
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   <IconComponent className="w-4 h-4" />
