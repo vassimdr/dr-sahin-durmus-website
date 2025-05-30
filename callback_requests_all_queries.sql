@@ -625,13 +625,13 @@ ORDER BY created_at DESC;
 -- Index kullanım istatistikleri
 SELECT 
     schemaname,
-    tablename,
-    indexname,
+    relname as tablename,
+    indexrelname as indexname,
     idx_scan,
     idx_tup_read,
     idx_tup_fetch
 FROM pg_stat_user_indexes 
-WHERE tablename = 'callback_requests';
+WHERE relname = 'callback_requests';
 
 -- Tablo istatistikleri
 SELECT 
