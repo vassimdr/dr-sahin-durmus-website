@@ -24,7 +24,7 @@ CREATE TABLE public.callback_requests (
     phone text NOT NULL CHECK (LENGTH(REGEXP_REPLACE(phone, '[^0-9]', '', 'g')) >= 10),
     status text DEFAULT 'pending' NOT NULL CHECK (status IN ('pending', 'called', 'completed', 'cancelled', 'scheduled')),
     priority integer DEFAULT 1 CHECK (priority BETWEEN 1 AND 5),
-    source text DEFAULT 'website' CHECK (source IN ('website', 'phone', 'whatsapp', 'social', 'referral')),
+    source text DEFAULT 'website' CHECK (source IN ('website', 'phone', 'whatsapp', 'instagram', 'tiktok', 'social', 'referral')),
     notes text,
     admin_notes text,
     created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
@@ -411,6 +411,8 @@ SELECT
         WHEN 'website' THEN 'Website'
         WHEN 'phone' THEN 'Telefon'
         WHEN 'whatsapp' THEN 'WhatsApp'
+        WHEN 'instagram' THEN 'Instagram'
+        WHEN 'tiktok' THEN 'TikTok'
         WHEN 'social' THEN 'Sosyal Medya'
         WHEN 'referral' THEN 'Tavsiye'
     END as kaynak_adi,

@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, User, CheckCircle, AlertCircle, Loader2, MessageSquare, Star } from 'lucide-react';
+import { Phone, User, CheckCircle, AlertCircle, Loader2, MessageSquare, Star, Globe, Instagram, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 interface CallbackFormProps {
   className?: string;
@@ -16,19 +17,21 @@ interface CallbackFormProps {
 
 // Dinamik konfigürasyon
 const PRIORITY_OPTIONS = [
-  { value: 1, label: 'Normal', icon: '⚪', color: 'text-gray-600' },
-  { value: 2, label: 'Önemli', icon: '🟡', color: 'text-yellow-600' },
-  { value: 3, label: 'Yüksek', icon: '🟠', color: 'text-orange-600' },
-  { value: 4, label: 'Acil', icon: '🔴', color: 'text-red-600' },
-  { value: 5, label: 'Kritik', icon: '🚨', color: 'text-red-800' }
+  { value: 1, label: 'Normal', icon: '⚪', color: 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200' },
+  { value: 2, label: 'Önemli', icon: '🟡', color: 'bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200' },
+  { value: 3, label: 'Yüksek', icon: '🟠', color: 'bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-200' },
+  { value: 4, label: 'Acil', icon: '🔴', color: 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200' },
+  { value: 5, label: 'Kritik', icon: '🚨', color: 'bg-red-200 text-red-800 border-red-300 hover:bg-red-300' }
 ];
 
 const SOURCE_OPTIONS = [
-  { value: 'website', label: 'Website' },
-  { value: 'phone', label: 'Telefon' },
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'social', label: 'Sosyal Medya' },
-  { value: 'referral', label: 'Tavsiye' }
+  { value: 'website', label: 'Website', icon: '🌐' },
+  { value: 'phone', label: 'Telefon', icon: '📞' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: '💬' },
+  { value: 'instagram', label: 'Instagram', icon: '📸' },
+  { value: 'tiktok', label: 'TikTok', icon: '🎵' },
+  { value: 'social', label: 'Diğer Sosyal Medya', icon: '📱' },
+  { value: 'referral', label: 'Tavsiye', icon: '👥' }
 ];
 
 export default function CallbackForm({ className = '' }: CallbackFormProps) {
@@ -64,21 +67,6 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
     }
   };
 
-  const formatPhone = (value: string) => {
-    const numbers = value.replace(/[^\d]/g, '');
-    if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 6) return `${numbers.slice(0, 3)} ${numbers.slice(3)}`;
-    if (numbers.length <= 8) return `${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6)}`;
-    return `${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6, 8)} ${numbers.slice(8, 10)}`;
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhone(e.target.value);
-    if (formatted.replace(/[^\d]/g, '').length <= 10) {
-      setFormData(prev => ({ ...prev, phone: formatted }));
-    }
-  };
-
   const validateForm = () => {
     const errors: string[] = [];
     
@@ -86,8 +74,7 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
       errors.push('İsim gereklidir');
     }
     
-    const phoneDigits = formData.phone.replace(/[^\d]/g, '');
-    if (phoneDigits.length < 10) {
+    if (!formData.phone || formData.phone.length < 10) {
       errors.push('Geçerli bir telefon numarası giriniz');
     }
     
@@ -127,6 +114,7 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
 
       if (result.success) {
         setSubmitStatus('success');
+        setSubmitted(true);
         // Form'u sıfırla
         setFormData({
           name: '',
@@ -238,66 +226,69 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
             <Phone className="w-4 h-4" />
             Telefon Numarası *
           </Label>
-          <Input
-            id="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handlePhoneChange}
-            placeholder="5XX XXX XX XX"
-            className="bg-white/70 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-            disabled={isSubmitting}
-          />
+          <div className="phone-input-container">
+            <PhoneInput
+              international
+              countryCallingCodeEditable={false}
+              defaultCountry="TR"
+              value={formData.phone}
+              onChange={(value) => handleInputChange('phone', value || '')}
+              className="bg-white/70 border border-gray-200 rounded-md focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400/20"
+              disabled={isSubmitting}
+              placeholder="Telefon numaranızı giriniz"
+            />
+          </div>
         </div>
 
-        {/* Öncelik */}
-        <div className="space-y-2">
+        {/* Öncelik Durumu - Butonlar */}
+        <div className="space-y-3">
           <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Star className="w-4 h-4" />
             Öncelik Durumu
           </Label>
-          <div className={isSubmitting ? 'opacity-50 pointer-events-none' : ''}>
-            <Select 
-              value={formData.priority.toString()} 
-              onValueChange={(value) => handleInputChange('priority', parseInt(value))}
-            >
-              <SelectTrigger className="bg-white/70 border-gray-200 focus:border-blue-400">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {PRIORITY_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value.toString()}>
-                    <div className="flex items-center gap-2">
-                      <span>{option.icon}</span>
-                      <span className={option.color}>{option.label}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {PRIORITY_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => handleInputChange('priority', option.value)}
+                disabled={isSubmitting}
+                className={`p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2 text-sm font-medium ${
+                  formData.priority === option.value
+                    ? `${option.color} ring-2 ring-blue-400 ring-offset-1`
+                    : `${option.color} opacity-60 hover:opacity-100`
+                } disabled:opacity-30 disabled:cursor-not-allowed`}
+              >
+                <span className="text-base">{option.icon}</span>
+                <span>{option.label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Kaynak */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">
+        {/* Bizi Nereden Duydunuz - Butonlar */}
+        <div className="space-y-3">
+          <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Globe className="w-4 h-4" />
             Bizi Nereden Duydunuz?
           </Label>
-          <div className={isSubmitting ? 'opacity-50 pointer-events-none' : ''}>
-            <Select 
-              value={formData.source} 
-              onValueChange={(value) => handleInputChange('source', value)}
-            >
-              <SelectTrigger className="bg-white/70 border-gray-200 focus:border-blue-400">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SOURCE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {SOURCE_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => handleInputChange('source', option.value)}
+                disabled={isSubmitting}
+                className={`p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2 text-sm font-medium ${
+                  formData.source === option.value
+                    ? 'bg-blue-100 text-blue-700 border-blue-300 ring-2 ring-blue-400 ring-offset-1'
+                    : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300'
+                } disabled:opacity-30 disabled:cursor-not-allowed`}
+              >
+                <span className="text-base">{option.icon}</span>
+                <span className="text-xs leading-tight">{option.label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -347,6 +338,25 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
           * Zorunlu alanlar. Bilgileriniz güvenli şekilde saklanır.
         </p>
       </div>
+
+      <style jsx global>{`
+        .phone-input-container .PhoneInputInput {
+          background: rgba(255, 255, 255, 0.7);
+          border: none;
+          outline: none;
+          padding: 8px 12px;
+          font-size: 14px;
+        }
+        .phone-input-container .PhoneInputCountrySelect {
+          background: rgba(255, 255, 255, 0.7);
+          border: none;
+          outline: none;
+          margin-right: 8px;
+        }
+        .phone-input-container .PhoneInputCountrySelectArrow {
+          color: #6b7280;
+        }
+      `}</style>
     </motion.div>
   );
 } 

@@ -80,7 +80,9 @@ const SOURCE_CONFIG = {
   website: { label: 'Website', color: 'bg-blue-50 text-blue-700' },
   phone: { label: 'Telefon', color: 'bg-green-50 text-green-700' },
   whatsapp: { label: 'WhatsApp', color: 'bg-green-50 text-green-700' },
-  social: { label: 'Sosyal Medya', color: 'bg-purple-50 text-purple-700' },
+  instagram: { label: 'Instagram', color: 'bg-pink-50 text-pink-700' },
+  tiktok: { label: 'TikTok', color: 'bg-gray-50 text-gray-700' },
+  social: { label: 'Diğer Sosyal Medya', color: 'bg-purple-50 text-purple-700' },
   referral: { label: 'Tavsiye', color: 'bg-orange-50 text-orange-700' }
 };
 

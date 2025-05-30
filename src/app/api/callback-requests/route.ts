@@ -27,7 +27,7 @@ function validateCallbackRequest(data: any) {
     errors.push('Öncelik 1-5 arasında olmalıdır')
   }
   
-  const validSources = ['website', 'phone', 'whatsapp', 'social', 'referral']
+  const validSources = ['website', 'phone', 'whatsapp', 'instagram', 'tiktok', 'social', 'referral']
   if (data.source && !validSources.includes(data.source)) {
     errors.push('Geçersiz kaynak türü')
   }
