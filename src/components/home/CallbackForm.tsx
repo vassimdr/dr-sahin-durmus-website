@@ -37,53 +37,53 @@ interface CallbackFormProps {
   className?: string;
 }
 
-// Dinamik konfigürasyon - Daha zarif ikonlar ve renkler
+// Dinamik konfigürasyon - Zarif pill-shaped butonlar
 const PRIORITY_OPTIONS = [
   { 
     value: 1, 
     label: 'Normal', 
     icon: Circle, 
-    color: 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300',
-    selectedColor: 'bg-slate-100 text-slate-700 border-slate-400 shadow-sm'
+    color: 'bg-gray-50 text-gray-600 border-gray-200',
+    selectedColor: 'bg-gray-100 text-gray-700 border-gray-300'
   },
   { 
     value: 2, 
     label: 'Önemli', 
     icon: Star, 
-    color: 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100 hover:border-amber-300',
-    selectedColor: 'bg-amber-100 text-amber-700 border-amber-400 shadow-sm'
+    color: 'bg-amber-50 text-amber-600 border-amber-200',
+    selectedColor: 'bg-amber-100 text-amber-700 border-amber-300'
   },
   { 
     value: 3, 
     label: 'Yüksek', 
     icon: AlertTriangle, 
-    color: 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100 hover:border-orange-300',
-    selectedColor: 'bg-orange-100 text-orange-700 border-orange-400 shadow-sm'
+    color: 'bg-orange-50 text-orange-600 border-orange-200',
+    selectedColor: 'bg-orange-100 text-orange-700 border-orange-300'
   },
   { 
     value: 4, 
     label: 'Acil', 
     icon: Zap, 
-    color: 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100 hover:border-red-300',
-    selectedColor: 'bg-red-100 text-red-700 border-red-400 shadow-sm'
+    color: 'bg-red-50 text-red-600 border-red-200',
+    selectedColor: 'bg-red-100 text-red-700 border-red-300'
   },
   { 
     value: 5, 
     label: 'Kritik', 
     icon: Flame, 
-    color: 'bg-red-100 text-red-700 border-red-300 hover:bg-red-200 hover:border-red-400',
-    selectedColor: 'bg-red-200 text-red-800 border-red-500 shadow-md'
+    color: 'bg-red-100 text-red-700 border-red-300',
+    selectedColor: 'bg-red-200 text-red-800 border-red-400'
   }
 ];
 
 const SOURCE_OPTIONS = [
-  { value: 'website', label: 'Website', icon: Monitor, color: 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100' },
-  { value: 'phone', label: 'Telefon', icon: PhoneCall, color: 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100' },
-  { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100' },
-  { value: 'instagram', label: 'Instagram', icon: Camera, color: 'bg-pink-50 text-pink-600 border-pink-200 hover:bg-pink-100' },
-  { value: 'tiktok', label: 'TikTok', icon: Music, color: 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100' },
-  { value: 'social', label: 'Diğer Sosyal Medya', icon: Share2, color: 'bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100' },
-  { value: 'referral', label: 'Tavsiye', icon: Users, color: 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100' }
+  { value: 'website', label: 'Website', icon: Monitor, color: 'bg-blue-50 text-blue-600 border-blue-200', selectedColor: 'bg-blue-100 text-blue-700 border-blue-300' },
+  { value: 'phone', label: 'Telefon', icon: PhoneCall, color: 'bg-green-50 text-green-600 border-green-200', selectedColor: 'bg-green-100 text-green-700 border-green-300' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: 'bg-emerald-50 text-emerald-600 border-emerald-200', selectedColor: 'bg-emerald-100 text-emerald-700 border-emerald-300' },
+  { value: 'instagram', label: 'Instagram', icon: Camera, color: 'bg-pink-50 text-pink-600 border-pink-200', selectedColor: 'bg-pink-100 text-pink-700 border-pink-300' },
+  { value: 'tiktok', label: 'TikTok', icon: Music, color: 'bg-gray-50 text-gray-600 border-gray-200', selectedColor: 'bg-gray-100 text-gray-700 border-gray-300' },
+  { value: 'social', label: 'Diğer Sosyal Medya', icon: Share2, color: 'bg-purple-50 text-purple-600 border-purple-200', selectedColor: 'bg-purple-100 text-purple-700 border-purple-300' },
+  { value: 'referral', label: 'Tavsiye', icon: Users, color: 'bg-orange-50 text-orange-600 border-orange-200', selectedColor: 'bg-orange-100 text-orange-700 border-orange-300' }
 ];
 
 export default function CallbackForm({ className = '' }: CallbackFormProps) {
@@ -292,81 +292,63 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
           </div>
         </div>
 
-        {/* Öncelik Durumu - Zarif Butonlar */}
+        {/* Öncelik Durumu - Zarif Pill Butonlar */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Star className="w-4 h-4" />
             Öncelik Durumu
           </Label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="flex flex-wrap gap-2">
             {PRIORITY_OPTIONS.map((option) => {
               const IconComponent = option.icon;
               const isSelected = formData.priority === option.value;
               
               return (
-                <motion.button
+                <button
                   key={option.value}
                   type="button"
                   onClick={() => handleInputChange('priority', option.value)}
                   disabled={isSubmitting}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 text-sm font-medium min-h-[80px] ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? `${option.selectedColor} ring-2 ring-blue-400 ring-offset-2 transform scale-105`
-                      : `${option.color} hover:transform hover:scale-102`
-                  } disabled:opacity-30 disabled:cursor-not-allowed disabled:transform-none shadow-sm hover:shadow-md`}
+                      ? option.selectedColor
+                      : `${option.color} hover:${option.selectedColor}`
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <IconComponent className="w-5 h-5" />
-                  <span className="text-xs leading-tight text-center">{option.label}</span>
-                  {isSelected && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"
-                    />
-                  )}
-                </motion.button>
+                  <IconComponent className="w-4 h-4" />
+                  <span>{option.label}</span>
+                </button>
               );
             })}
           </div>
         </div>
 
-        {/* Bizi Nereden Duydunuz - Zarif Butonlar */}
+        {/* Bizi Nereden Duydunuz - Zarif Pill Butonlar */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Globe className="w-4 h-4" />
             Bizi Nereden Duydunuz?
           </Label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="flex flex-wrap gap-2">
             {SOURCE_OPTIONS.map((option) => {
               const IconComponent = option.icon;
               const isSelected = formData.source === option.value;
               
               return (
-                <motion.button
+                <button
                   key={option.value}
                   type="button"
                   onClick={() => handleInputChange('source', option.value)}
                   disabled={isSubmitting}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2 text-sm font-medium min-h-[80px] ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? 'bg-blue-100 text-blue-700 border-blue-400 ring-2 ring-blue-400 ring-offset-2 shadow-md transform scale-105'
-                      : `${option.color} hover:transform hover:scale-102 hover:shadow-md`
-                  } disabled:opacity-30 disabled:cursor-not-allowed disabled:transform-none shadow-sm`}
+                      ? option.selectedColor
+                      : `${option.color} hover:${option.selectedColor}`
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <IconComponent className="w-5 h-5" />
-                  <span className="text-xs leading-tight text-center">{option.label}</span>
-                  {isSelected && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"
-                    />
-                  )}
-                </motion.button>
+                  <IconComponent className="w-4 h-4" />
+                  <span>{option.label}</span>
+                </button>
               );
             })}
           </div>
