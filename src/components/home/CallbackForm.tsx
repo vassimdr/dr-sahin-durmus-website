@@ -7,23 +7,19 @@ import {
   User, 
   CheckCircle, 
   AlertCircle, 
-  Loader2, 
   MessageSquare, 
   Star, 
   Globe, 
-  Instagram, 
-  Music,
   Circle,
   AlertTriangle,
   Zap,
   Flame,
-  Siren,
   Monitor,
   PhoneCall,
   MessageCircle,
-  Camera,
   Users,
-  Share2
+  Share2,
+  LucideIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,53 +33,81 @@ interface CallbackFormProps {
   className?: string;
 }
 
-// Dinamik konfigürasyon - Zarif pill-shaped butonlar
-const PRIORITY_OPTIONS = [
+// Icon component type
+type IconComponent = LucideIcon | React.ComponentType<{ className?: string }>;
+
+// Priority option type
+interface PriorityOption {
+  value: number;
+  label: string;
+  icon: IconComponent;
+  iconColor: string;
+}
+
+// Source option type
+interface SourceOption {
+  value: string;
+  label: string;
+  icon: IconComponent;
+  selectedColor: string;
+}
+
+// Dinamik konfigürasyon - İnce butonlar ve yeni renk sistemi
+const PRIORITY_OPTIONS: PriorityOption[] = [
   { 
     value: 1, 
     label: 'Normal', 
     icon: Circle, 
-    color: 'bg-gray-50 text-gray-600 border-gray-200',
-    selectedColor: 'bg-gray-100 text-gray-700 border-gray-300'
+    iconColor: 'text-gray-500'
   },
   { 
     value: 2, 
     label: 'Önemli', 
     icon: Star, 
-    color: 'bg-amber-50 text-amber-600 border-amber-200',
-    selectedColor: 'bg-amber-100 text-amber-700 border-amber-300'
+    iconColor: 'text-amber-500'
   },
   { 
     value: 3, 
     label: 'Yüksek', 
     icon: AlertTriangle, 
-    color: 'bg-orange-50 text-orange-600 border-orange-200',
-    selectedColor: 'bg-orange-100 text-orange-700 border-orange-300'
+    iconColor: 'text-orange-500'
   },
   { 
     value: 4, 
     label: 'Acil', 
     icon: Zap, 
-    color: 'bg-red-50 text-red-600 border-red-200',
-    selectedColor: 'bg-red-100 text-red-700 border-red-300'
+    iconColor: 'text-red-500'
   },
   { 
     value: 5, 
     label: 'Kritik', 
     icon: Flame, 
-    color: 'bg-red-100 text-red-700 border-red-300',
-    selectedColor: 'bg-red-200 text-red-800 border-red-400'
+    iconColor: 'text-red-600'
   }
 ];
 
-const SOURCE_OPTIONS = [
-  { value: 'website', label: 'Website', icon: Monitor, color: 'bg-blue-50 text-blue-600 border-blue-200', selectedColor: 'bg-blue-100 text-blue-700 border-blue-300' },
-  { value: 'phone', label: 'Telefon', icon: PhoneCall, color: 'bg-green-50 text-green-600 border-green-200', selectedColor: 'bg-green-100 text-green-700 border-green-300' },
-  { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: 'bg-emerald-50 text-emerald-600 border-emerald-200', selectedColor: 'bg-emerald-100 text-emerald-700 border-emerald-300' },
-  { value: 'instagram', label: 'Instagram', icon: Camera, color: 'bg-pink-50 text-pink-600 border-pink-200', selectedColor: 'bg-pink-100 text-pink-700 border-pink-300' },
-  { value: 'tiktok', label: 'TikTok', icon: Music, color: 'bg-gray-50 text-gray-600 border-gray-200', selectedColor: 'bg-gray-100 text-gray-700 border-gray-300' },
-  { value: 'social', label: 'Diğer Sosyal Medya', icon: Share2, color: 'bg-purple-50 text-purple-600 border-purple-200', selectedColor: 'bg-purple-100 text-purple-700 border-purple-300' },
-  { value: 'referral', label: 'Tavsiye', icon: Users, color: 'bg-orange-50 text-orange-600 border-orange-200', selectedColor: 'bg-orange-100 text-orange-700 border-orange-300' }
+// Custom TikTok Icon Component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.43z"/>
+  </svg>
+);
+
+// Custom Instagram Icon Component  
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+);
+
+const SOURCE_OPTIONS: SourceOption[] = [
+  { value: 'website', label: 'Website', icon: Monitor, selectedColor: 'bg-blue-100 text-blue-700 border-blue-300' },
+  { value: 'phone', label: 'Telefon', icon: PhoneCall, selectedColor: 'bg-green-100 text-green-700 border-green-300' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, selectedColor: 'bg-emerald-100 text-emerald-700 border-emerald-300' },
+  { value: 'instagram', label: 'Instagram', icon: InstagramIcon, selectedColor: 'bg-pink-100 text-pink-700 border-pink-300' },
+  { value: 'tiktok', label: 'TikTok', icon: TikTokIcon, selectedColor: 'bg-gray-100 text-gray-700 border-gray-300' },
+  { value: 'social', label: 'Diğer Sosyal Medya', icon: Share2, selectedColor: 'bg-purple-100 text-purple-700 border-purple-300' },
+  { value: 'referral', label: 'Tavsiye', icon: Users, selectedColor: 'bg-orange-100 text-orange-700 border-orange-300' }
 ];
 
 export default function CallbackForm({ className = '' }: CallbackFormProps) {
@@ -278,21 +302,21 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
             <Phone className="w-4 h-4" />
             Telefon Numarası *
           </Label>
-          <div className="phone-input-container">
+          <div className="phone-input-wrapper">
             <PhoneInput
               international
               countryCallingCodeEditable={false}
               defaultCountry="TR"
               value={formData.phone}
               onChange={(value) => handleInputChange('phone', value || '')}
-              className="bg-white/70 border border-gray-200 rounded-md focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400/20"
               disabled={isSubmitting}
               placeholder="Telefon numaranızı giriniz"
+              className="phone-input-custom"
             />
           </div>
         </div>
 
-        {/* Öncelik Durumu - Zarif Pill Butonlar */}
+        {/* Öncelik Durumu - İnce Butonlar */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Star className="w-4 h-4" />
@@ -309,13 +333,13 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
                   type="button"
                   onClick={() => handleInputChange('priority', option.value)}
                   disabled={isSubmitting}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? `${option.selectedColor} border-current shadow-sm ring-2 ring-blue-400 ring-opacity-50`
-                      : `${option.color} border-transparent hover:${option.selectedColor} hover:border-current`
+                      ? `bg-white text-gray-700 border-gray-400 shadow-sm`
+                      : `bg-white text-gray-600 border-gray-200 hover:border-gray-300`
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <IconComponent className="w-4 h-4" />
+                  <IconComponent className={`w-4 h-4 ${option.iconColor}`} />
                   <span>{option.label}</span>
                 </button>
               );
@@ -323,7 +347,7 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
           </div>
         </div>
 
-        {/* Bizi Nereden Duydunuz - Zarif Pill Butonlar */}
+        {/* Bizi Nereden Duydunuz - İnce Butonlar */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Globe className="w-4 h-4" />
@@ -340,13 +364,13 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
                   type="button"
                   onClick={() => handleInputChange('source', option.value)}
                   disabled={isSubmitting}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-sm font-medium transition-all duration-200 ${
                     isSelected
-                      ? `${option.selectedColor} border-current shadow-sm ring-2 ring-blue-400 ring-opacity-50`
-                      : `${option.color} border-transparent hover:${option.selectedColor} hover:border-current`
+                      ? option.selectedColor
+                      : `bg-white text-gray-600 border-gray-200 hover:border-gray-300`
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <IconComponent className="w-4 h-4" />
+                  <IconComponent className={`w-4 h-4 ${isSelected ? '' : 'text-gray-500'}`} />
                   <span>{option.label}</span>
                 </button>
               );
@@ -402,21 +426,51 @@ export default function CallbackForm({ className = '' }: CallbackFormProps) {
       </div>
 
       <style jsx global>{`
-        .phone-input-container .PhoneInputInput {
+        .phone-input-wrapper {
+          position: relative;
+        }
+        
+        .phone-input-custom {
+          width: 100%;
+        }
+        
+        .phone-input-custom .PhoneInputInput {
           background: rgba(255, 255, 255, 0.7);
-          border: none;
-          outline: none;
+          border: 1px solid #d1d5db;
+          border-radius: 0.375rem;
           padding: 8px 12px;
           font-size: 14px;
-        }
-        .phone-input-container .PhoneInputCountrySelect {
-          background: rgba(255, 255, 255, 0.7);
-          border: none;
+          width: 100%;
           outline: none;
-          margin-right: 8px;
+          transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .phone-input-container .PhoneInputCountrySelectArrow {
+        
+        .phone-input-custom .PhoneInputInput:focus {
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+        
+        .phone-input-custom .PhoneInputCountrySelect {
+          background: rgba(255, 255, 255, 0.7);
+          border: 1px solid #d1d5db;
+          border-radius: 0.375rem;
+          margin-right: 8px;
+          padding: 4px 8px;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        
+        .phone-input-custom .PhoneInputCountrySelect:focus {
+          border-color: #60a5fa;
+        }
+        
+        .phone-input-custom .PhoneInputCountrySelectArrow {
           color: #6b7280;
+          margin-left: 4px;
+        }
+        
+        .phone-input-custom .PhoneInputCountryIcon {
+          margin-right: 4px;
         }
       `}</style>
     </motion.div>
